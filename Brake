@@ -1,0 +1,22 @@
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+import streamlit as st
+dataset=pd.read_csv('Brake.csv')
+x=dataset.iloc[:,:-1].values
+y=dataset.iloc[:,-1].values
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2)
+classifier=LogisticRegression()
+classifier.fit(x_train,y_train)
+st.title('Brake Failure Alert')
+t=st.number_input('Enter Temperature:')
+p=st.number_input('Enter Pressure')
+b=st.number_input('Enter Brake_pedal_position:')
+s=st.number_input('Enter speed:')
+if st.button('Brake Failure'):
+    prediction = classifier.predict([[t,p,b,s]])[0]
+    if prediction == 'Very High':
+        st.error('Brake Pads are Worn Out! Alert for Brake Failure')
+    else:
+        st.success('Brake Pads are Okay')
